@@ -6,15 +6,6 @@ BUILDDIR=$(pwd)
 BINUTILS_DIR="$BUILDDIR/binutils-gdb"
 INSTALL_DIR="$BUILDDIR/install"
 BINTUILS_BUILD="$BUILDDIR/binutils-build"
-PERSONAL=0
-
-msg() {
-	if [[ $PERSONAL -eq 1 ]]; then
-		telegram-send "$1"
-	else
-		echo "$1"
-	fi
-}
 
 cd $BINUTILS_DIR
 # Turn off development mode
@@ -114,12 +105,11 @@ build() {
 	make install -j$(($(nproc --all) + 2))
 }
 
-msg "Starting Binutils Build"
-
-msg "Starting Binutils Build for x86-64"
+echo "Starting Binutils Build"
+echo "Starting Binutils Build for x86-64"
 build "X86"
-msg "Starting Binutils Build for arm"
+echo "Starting Binutils Build for arm"
 build "ARM"
-msg "Starting Binutils Build for arm64"
+echo "Starting Binutils Build for arm64"
 build "ARM64"
-msg "Binutils Build: END"
+echo "Binutils Build: END"
