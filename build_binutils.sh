@@ -16,6 +16,11 @@ msg() {
 	fi
 }
 
+cd $BINUTILS_DIR
+# Turn off development mode
+sed -i '/^development=/s/true/false/' bfd/development.sh
+cd $BUILDDIR
+
 build() {
 	rm -rf $BINTUILS_BUILD
 	mkdir -p $BINTUILS_BUILD
