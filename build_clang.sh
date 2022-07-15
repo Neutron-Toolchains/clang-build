@@ -31,7 +31,7 @@ if [[ $CLEAN_BUILD -eq 3 ]]; then
 fi
 
 llvm_clone() {
-	if ! git clone https://github.com/llvm/llvm-project.git; then
+	if ! git clone https://github.com/llvm/llvm-project.git --depth=1; then
 		echo "llvm-project git clone: Failed" >&2
 		exit 1
 	fi
@@ -45,7 +45,7 @@ llvm_pull() {
 }
 
 binutils_clone() {
-	if ! git clone https://sourceware.org/git/binutils-gdb.git -b binutils-$BINUTILS_VER-branch; then
+	if ! git clone https://sourceware.org/git/binutils-gdb.git -b binutils-$BINUTILS_VER-branch --depth=1; then
 		echo "binutils git clone: Failed" >&2
 		exit 1
 	fi
