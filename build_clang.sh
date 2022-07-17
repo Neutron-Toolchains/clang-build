@@ -111,8 +111,8 @@ cd "$OUT"
 
 LLVM_BIN_DIR=$(readlink -f $(which clang) | rev | cut -d'/' -f2- | rev)
 
-OPT_FLAGS="-march=x86-64 -mtune=generic -ffunction-sections -fdata-sections -flto=thin -fsplit-lto-unit -O3"
-OPT_FLAGS_LD="-Wl,-O3,--as-needed,-z,now -Wl,--lto-O3 -fuse-ld=$LLVM_BIN_DIR/ld.lld"
+OPT_FLAGS="-march=x86-64 -mtune=generic -ffunction-sections -fdata-sections -O3"
+OPT_FLAGS_LD="-Wl,-O3,--as-needed,-z,now -fuse-ld=$LLVM_BIN_DIR/ld.lld"
 
 if [[ $POLLY_OPT -eq 1 ]]; then
 	STAGE1_PROJS="clang;lld;compiler-rt;polly"
@@ -141,7 +141,6 @@ cmake -G Ninja -Wno-dev --log-level=NOTICE \
 	-DCLANG_VENDOR="Neutron" \
 	-DLLVM_ENABLE_BACKTRACES=OFF \
 	-DLLVM_ENABLE_WARNINGS=OFF \
-	-DLLVM_ENABLE_LTO=Thin \
 	-DCMAKE_C_COMPILER=$LLVM_BIN_DIR/clang \
 	-DCMAKE_CXX_COMPILER=$LLVM_BIN_DIR/clang++ \
 	-DCMAKE_AR=$LLVM_BIN_DIR/llvm-ar \
@@ -174,6 +173,8 @@ ninja -j$(nproc --all) || (
 
 STAGE1="$LLVM_BUILD/stage1/bin"
 echo "Stage 1 Build: End"
+
+OPT_FLAGS="-march=x86-64 -mtune=generic -ffunction-sections -fdata-sections -flto=full -O3"
 
 export PATH="$STAGE1/bin:$STAGE1:$PATH"
 if [[ $POLLY_OPT -eq 1 ]]; then
@@ -219,7 +220,7 @@ cmake -G Ninja -Wno-dev --log-level=NOTICE \
 	-DCOMPILER_RT_BUILD_CRT=OFF \
 	-DCOMPILER_RT_BUILD_XRAY=OFF \
 	-DLLVM_ENABLE_TERMINFO=OFF \
-	-DLLVM_ENABLE_LTO=Thin \
+	-DLLVM_ENABLE_LTO=Full \
 	-DCMAKE_C_COMPILER=$STAGE1/clang \
 	-DCMAKE_CXX_COMPILER=$STAGE1/clang++ \
 	-DCMAKE_AR=$STAGE1/llvm-ar \
